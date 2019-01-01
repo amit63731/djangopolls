@@ -1,0 +1,418 @@
+amit@amit-Inspiron-7460:~$ python3 -m virtualenv django
+Using base prefix '/usr'
+New python executable in /home/amit/django/bin/python3
+Also creating executable in /home/amit/django/bin/python
+Installing setuptools, pip, wheel...
+done.
+amit@amit-Inspiron-7460:~$ ls
+d3-jupyter-tutorial  Documents         Music     skl_guc_ver6_1
+Desktop              Downloads         my-app    sklgucver61.tar.bz2
+django               examples.desktop  Pictures  Templates
+djangoproject        jupyter-docs      Public    Videos
+amit@amit-Inspiron-7460:~$ 
+amit@amit-Inspiron-7460:~$ ls
+d3-jupyter-tutorial  Documents         Music     skl_guc_ver6_1
+Desktop              Downloads         my-app    sklgucver61.tar.bz2
+django               examples.desktop  Pictures  Templates
+djangoproject        jupyter-docs      Public    Videos
+amit@amit-Inspiron-7460:~$ cd djangoproject
+amit@amit-Inspiron-7460:~/djangoproject$ ls
+bin  include  lib  lib64  pyvenv.cfg
+amit@amit-Inspiron-7460:~/djangoproject$ python --version
+Python 2.7.15rc1
+amit@amit-Inspiron-7460:~/djangoproject$ 
+
+
+---------------------------------------
+amit@amit-Inspiron-7460:~$ virtualenv djangoproject --python=python3
+Already using interpreter /usr/bin/python3
+Using base prefix '/usr'
+New python executable in /home/amit/djangoproject/bin/python3
+Also creating executable in /home/amit/djangoproject/bin/python
+Installing setuptools, pip, wheel...
+done.
+
+amit@amit-Inspiron-7460:~$ ls
+d3-jupyter-tutorial  Documents         Music     skl_guc_ver6_1
+Desktop              Downloads         my-app    sklgucver61.tar.bz2
+django               examples.desktop  Pictures  Templates
+djangoproject        jupyter-docs      Public    Videos
+
+amit@amit-Inspiron-7460:~$ cd djangoproject
+
+amit@amit-Inspiron-7460:~/djangoproject$ ls
+bin  include  lib
+amit@amit-Inspiron-7460:~/djangoproject$ source bin/activate
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject$ python --version
+Python 3.6.7
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject$ pip install Django==2.0
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject$ python
+Python 3.6.7 (default, Oct 22 2018, 11:32:17) 
+[GCC 8.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import django
+>>> print(django.get_version())
+2.0
+>>> exit()
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject$ pip freeze
+Django==2.0
+pytz==2018.7
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject$ django-admin startproject mysite
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject$ ls
+bin  include  lib  mysite
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject$ cd mysite
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ ls
+manage.py  mysite
+
+djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ python manage.py runserver
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 14 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+
+December 24, 2018 - 13:41:44
+Django version 2.0, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+^c
+djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ python manage.py startapp polls
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ ls
+db.sqlite3  manage.py  mysite  polls
+
+
+
+# polls/urls.py
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+
+# mysite/urls.py
+
+from django.contrib import admin
+from django.urls import path, include   #
+
+urlpatterns = [
+    path('polls/', include('polls.urls')), #
+    path('admin/', admin.site.urls),
+]
+
+# (djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ python manage.py runserver
+http://localhost:8000/polls/
+
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying sessions.0001_initial... OK
+
+# mysite/settings.py
+
+INSTALLED_APPS = [
+    'polls.apps.PollsConfig',  #
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+# mysite/models.py
+
+from django.db import models
+
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ python manage. makemigrations polls
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ python manage.py sqlmigrate polls 0001
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, polls, sessions
+Running migrations:
+  Applying polls.0001_initial... OK
+
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ python manage.py shell
+Python 3.6.7 (default, Oct 22 2018, 11:32:17) 
+[GCC 8.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from polls.models import Choice, Question
+>>> Question.objects.all()
+<QuerySet []>
+>>> from django.utils import timezone
+>>> q = Question(question_text="What's new?", pub_date=timezone.now())
+>>> q.save()
+>>> q.id
+1
+>>> q.question_text
+"What's new?"
+>>> q.pub_date
+datetime.datetime(2018, 12, 24, 14, 32, 44, 41255, tzinfo=<UTC>)
+>>> q.question_text = "What's up?"
+>>> q.save()
+>>> Question.objects.all()
+<QuerySet [<Question: Question object (1)>]>
+>>> exit()
+(djangoproject) amit@amit-Inspiron-7460:~/djangoproject/mysite$ python manage.py createsuperuser
+Username (leave blank to use 'amit'): admin
+Email address: 
+Password: 
+Password (again): 
+This password is too common.
+Password: 
+Password (again): 
+Error: Blank passwords aren't allowed.
+Password: 
+Password (again): 
+Superuser created successfully.
+
+# password is amitkumar
+# http://127.0.0.1:8000/admin/
+# models.py
+
+import datetime
+
+from django.db import models
+from django.utils import timezone
+
+
+class Question(models.Model):
+    # ...
+
+    def __str__(self):
+        return self.question_text
+
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+
+class Choice(models.Model):
+    # ...
+    def __str__(self):
+        return self.choice_text
+
+# admin.py
+
+from django.contrib import admin
+from .models import Question
+
+admin.site.register(Question)
+
+# http://127.0.0.1:8000/admin/
+
+# view.py
+
+def detail(request, question_id):
+    return HttpResponse("You're looking at question %s." % question_id)
+
+# polls/urls.py
+urlpatterns = [
+    path('', views.index, name='index'),
+    # ex: /polls/5/                              # comment added
+    path('<int:question_id>/', views.detail, name='detail'),   # url added
+]
+
+# http://127.0.0.1:8000/polls/6/
+# http://127.0.0.1:8000/polls/5
+notice how slash after 5 is added automatically
+
+# views.py
+def index(request):
+	latest_question_list = Question.objects.all()
+	output = ', '.join([q.question_text for q in latest_question_list])
+	print(latest_question_list)
+	return HttpResponse(output)
+
+# http://127.0.0.1:8000/polls/
+NameError at /polls/
+name 'Question' is not defined
+
+# views.py
+
+from .models import Question
+
+# http://127.0.0.1:8000/polls/
+
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+<QuerySet [<Question: What's up?>]>    # note this 
+[25/Dec/2018 09:44:41] "GET /polls/ HTTP/1.1" 200 10
+
+browser
+
+What's up?
+
+# mysite/polls/templates/polls/index.html
+
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+# views.py
+
+def index(request):
+	latest_question_list = Question.objects.all()
+	context = {'latest_question_list': latest_question_list}
+	return render(request, 'polls/index.html', context)
+	
+# views.py
+
+from django.http import Http404
+
+def detail(request, question_id):
+  try:
+    question = Question.objects.get(pk=question_id)
+  except Question.DoesNotExist:
+    raise Http404("Question does not exist")
+  template = 'polls/detail.html'
+  context = {'question': question}
+  return render(request, template, context)
+
+# templates/polls/details.html
+
+<!--polls/detail.html-->
+{{ question }}
+
+# views.py
+
+def detail(request, question_id):
+  question = get_object_or_404(Question, pk=question_id)  # using get_object_or_404
+  template = 'polls/detail.html'
+  context = {'question': question}
+  return render(request, template, context)
+
+# admin.py 
+
+from .models import Question, Choice  # import Choice model
+
+admin.site.register(Question)
+admin.site.register(Choice)  # register Choice model 
+
+# detail.html
+
+<!--polls/detail.html-->
+<h1>{{ question.question_text }}</h1>
+<ul>
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }}</li>
+{% endfor %}
+</ul>
+
+# http://localhost:8000/admin/polls/choice/add/
+
+question : what's up
+choice : Not much
+votes : 0
+
+# http://localhost:8000/admin/polls/choice/add/
+
+question : what's up
+choice : The sky
+votes : 0
+
+# http://localhost:8000/admin/polls/choice/add/
+
+question : what's up
+choice : just hacking again
+votes : 0
+
+# http://localhost:8000/polls/1/
+# index.html
+
+<li><a href="{% url 'detail' question.id%}">{{ question.question_text }}</a></li>
+    {% endfor %}
+
+# http://localhost:8000/polls/
+# http://localhost:8000/polls/1/
+# namespacing
+# polls/urls.py
+from . import views
+
+app_name = 'polls'  # namespacing
+
+urlpatterns = [
+
+# details.html
+
+<!--polls/detail.html-->
+<h1>{{ question.question_text }}</h1>
+<form action="{% url 'polls:vote' question.id %}" method="post">
+  {% csrf_token %}
+  {% for choice in question.choice_set.all %}
+  <input type="radio" name="choice" id="choice{{ forloop.counter }}"value="{{choice.id}}">
+  <label for="choice{{forloop.counter}}">{{ choice.choice_text}}</label> <br>
+  {% endfor %} <br>
+  <input type="submit" name="Vote">
+</form>
+
+# views.py
+from django.http import  HttpResponseRedirect  
+from django.urls import reverse
+
+from .models import Question, Choice # import model Choice
+
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    print('Choice')
+    print(request.POST['choice'])
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+        print(selected_choice)
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+# polls/static/polls/style.css
